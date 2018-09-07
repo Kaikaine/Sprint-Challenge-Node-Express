@@ -78,6 +78,19 @@ server.get('/project/:id', (req, res) => {
         .catch(err => res.status(404).json({ message: "The project with the specified ID does not exist." }))
 })
 
+server.get('/project/:id/actions', (req, res) => {
+    const {id} = req.params;
+
+
+    projectDb.get(id).then(project => {
+        // res.status(200).json(project)
+        projectDb.getProjectActions(id).then(actions => {
+            res.status(201).json(actions).catch(err => res.status(404).json(err))
+        })
+    })
+        .catch(err => res.status(404).json({ message: "couldnt access project" }))
+})
+
 server.post('/project', (req, res) => {
     projectDb.insert(req.body)
         .then(response => res.status(201).json({ message: 'project creation success' }))
